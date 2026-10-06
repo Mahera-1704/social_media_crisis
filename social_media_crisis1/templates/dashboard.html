@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Social Media Crisis Monitoring System{% endblock %}
+{% block refresh %}{{ refresh }}{% endblock %}
+{% block content %}
+<div class="row g-3 mb-3">
+{% for label, val, c in [('Total posts', total, 'dark'), ('Positive', counts.Positive, 'success'), ('Neutral', counts.Neutral, 'secondary'), ('Negative', counts.Negative, 'danger'), ('Critical alerts', critical, 'danger')] %}
+ <div class="col-6 col-md-4 col-xl"><div class="card p-3"><div class="stat text-{{ c }}">{{ val }}</div><div class="text-muted small">{{ label }}</div></div></div>
+{% endfor %}
+ <div class="col-12 col-xl-3"><div class="status-box status-{{ status }}"><div class="text-muted small">Current crisis status</div>
+  <span class="badge bg-{{ status|color }} fs-6">{{ status }}</span> <span class="ms-2">score {{ score }}/100</span></div></div>
+</div>
+<p class="text-muted small">Status compares the latest 24h of posts with the previous 24h. It flags a <em>potential</em> issue for human review.</p>
+<div class="row g-3">
+ <div class="col-lg-8"><div class="card p-3"><h6>Sentiment trend (last 7 days of data)</h6><div class="chart-box"><canvas id="sentTrend"></canvas></div></div></div>
+ <div class="col-lg-4"><div class="card p-3"><h6>Recent alerts</h6>
+  {% for a in alerts %}<div class="mb-2"><span class="badge bg-{{ a.severity|color }}">{{ a.severity }}</span> <span class="small">{{ a.message }}</span><div class="text-muted small">{{ a.created_at|ago }}</div></div>
+  {% else %}<p class="text-muted small">No alerts yet. Import posts on the Social Posts page.</p>{% endfor %}
+  <a href="{{ url_for('main.alerts') }}" class="small">View all alerts</a></div></div>
+ <div class="col-lg-6"><div class="card p-3"><h6>Post volume</h6><div class="chart-box"><canvas id="volume"></canvas></div></div></div>
+ <div class="col-lg-6"><div class="card p-3"><h6>Average crisis score</h6><div class="chart-box"><canvas id="crisis"></canvas></div></div></div>
+</div>{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Alerts{% endblock %}
+{% block content %}
+<div class="card"><div class="table-responsive"><table class="table mb-0"><thead><tr><th>ID</th><th>Type</th><th>Severity</th><th>Message</th><th>Score</th><th>Time</th><th>Status</th><th>Action</th></tr></thead><tbody>
+{% for a in alerts %}<tr><td>#{{ a.id }}</td><td>{{ a.alert_type }}</td><td><span class="badge bg-{{ a.severity|color }}">{{ a.severity }}</span></td>
+<td>{{ a.message }}</td><td>{{ a.crisis_score }}</td><td class="small">{{ a.created_at.strftime('%d %b %H:%M') }} ({{ a.created_at|ago }})</td>
+<td><span class="badge bg-{{ a.status|color }}">{{ a.status }}</span></td>
+<td class="text-nowrap">{% for s in ['Reviewing','Resolved'] %}{% if a.status != s %}
+<form method="post" action="{{ url_for('main.alert_status', aid=a.id) }}" class="d-inline"><input type="hidden" name="_csrf" value="{{ csrf }}"><input type="hidden" name="status" value="{{ s }}"><button class="btn btn-sm btn-outline-dark">{{ 'Mark reviewing' if s == 'Reviewing' else 'Mark resolved' }}</button></form>{% endif %}{% endfor %}</td></tr>
+{% else %}<tr><td colspan="8" class="text-muted p-4">No alerts. Alerts appear when imported posts show unusual negative activity.</td></tr>{% endfor %}
+</tbody></table></div></div>{% endblock %}

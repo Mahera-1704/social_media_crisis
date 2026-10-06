@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Crisis Keywords{% endblock %}
+{% block content %}
+<div class="row g-3">
+<div class="col-lg-5"><div class="card p-3 mb-3"><h6>Add keyword</h6>
+ <form method="post" action="{{ url_for('main.add_keyword') }}" class="d-flex gap-2"><input type="hidden" name="_csrf" value="{{ csrf }}">
+ <input name="keyword" class="form-control" placeholder="e.g. recall" required>
+ <select name="severity" class="form-select w-auto"><option value="1">Low</option><option value="2">Medium</option><option value="3">High</option></select>
+ <button class="btn btn-primary">Add</button></form></div>
+ <div class="card p-3"><h6>Most frequent keywords</h6><div class="chart-box"><canvas id="kw"></canvas></div></div></div>
+<div class="col-lg-7"><div class="card"><div class="table-responsive"><table class="table mb-0 align-middle">
+<thead><tr><th>Keyword</th><th>Frequency</th><th>Negative posts</th><th>Severity</th><th>Active</th><th></th></tr></thead><tbody>
+{% for k in kws %}{% set s = stats.get(k.keyword) %}<tr>
+<form method="post" action="{{ url_for('main.edit_keyword', kid=k.id) }}" id="e{{ k.id }}"><input type="hidden" name="_csrf" value="{{ csrf }}"></form>
+<td><input form="e{{ k.id }}" name="keyword" value="{{ k.keyword }}" class="form-control form-control-sm"></td>
+<td>{{ s.freq if s else 0 }}</td><td>{{ s.neg if s else 0 }}</td>
+<td><select form="e{{ k.id }}" name="severity" class="form-select form-select-sm">{% for v, l in [(1,'Low'),(2,'Medium'),(3,'High')] %}<option value="{{ v }}" {{ 'selected' if k.severity == v }}>{{ l }}</option>{% endfor %}</select></td>
+<td><input form="e{{ k.id }}" type="checkbox" name="active" {{ 'checked' if k.active }}></td>
+<td class="text-nowrap"><button form="e{{ k.id }}" class="btn btn-sm btn-outline-dark">Save</button>
+<form method="post" action="{{ url_for('main.delete_keyword', kid=k.id) }}" class="d-inline" onsubmit="return confirm('Delete keyword?')"><input type="hidden" name="_csrf" value="{{ csrf }}"><button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button></form></td></tr>
+{% endfor %}</tbody></table></div></div></div></div>{% endblock %}
+{% block scripts %}<script>
+const rows = {{ stats.values()|list|tojson }}.slice(0, 10);
+new Chart(document.getElementById('kw'), {type: 'bar', data: {labels: rows.map(r => r.keyword), datasets: [{label: 'Posts', data: rows.map(r => r.freq), backgroundColor: '#dc3545'}]}, options: {indexAxis: 'y', responsive: true, maintainAspectRatio: false}});
+</script>{% endblock %}

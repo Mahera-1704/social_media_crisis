@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block auth %}
+<form method="post" class="card p-4" style="width:340px;max-width:92vw">
+ <input type="hidden" name="_csrf" value="{{ csrf }}">
+ <h5 class="mb-1">Social Media Crisis Monitoring System</h5>
+ <p class="text-muted small">Administrator sign in</p>
+ <label class="form-label">Username</label><input name="username" class="form-control mb-3" required autofocus>
+ <label class="form-label">Password</label><input name="password" type="password" class="form-control mb-3" required>
+ <button class="btn btn-dark w-100">Login</button>
+</form>{% endblock %}

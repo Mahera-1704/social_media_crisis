@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Analytics{% endblock %}
+{% block content %}
+<div class="card p-3 mb-3 d-flex flex-row flex-wrap gap-2 align-items-center">
+ <select id="range" class="form-select w-auto"><option value="1">Today (latest 24h)</option><option value="7" selected>Last 7 days</option><option value="30">Last 30 days</option><option value="custom">Custom range</option></select>
+ <span id="custom" class="d-none"><input type="date" id="start" class="form-control d-inline w-auto"> <input type="date" id="end" class="form-control d-inline w-auto"></span>
+ <span class="text-muted small">Ranges end at the newest post in the database.</span></div>
+<div class="row g-3">
+ <div class="col-md-4"><div class="card p-3"><h6>Sentiment distribution</h6><div class="chart-box"><canvas id="sentPie"></canvas></div></div></div>
+ <div class="col-md-8"><div class="card p-3"><h6>Sentiment trend</h6><div class="chart-box"><canvas id="sentTrend"></canvas></div></div></div>
+ <div class="col-md-6"><div class="card p-3"><h6>Post volume</h6><div class="chart-box"><canvas id="volume"></canvas></div></div></div>
+ <div class="col-md-6"><div class="card p-3"><h6>Crisis score trend</h6><div class="chart-box"><canvas id="crisis"></canvas></div></div></div>
+ <div class="col-md-6"><div class="card p-3"><h6>Top crisis keywords</h6><div class="chart-box"><canvas id="kw"></canvas></div></div></div>
+ <div class="col-md-6"><div class="card p-3"><h6>Platform comparison</h6><div class="chart-box"><canvas id="platform"></canvas></div></div></div>
+ <div class="col-md-6"><div class="card p-3"><h6>Engagement by platform</h6>
+  <p class="small mb-1">Total: <b id="totEng">0</b> &nbsp; Average per post: <b id="avgEng">0</b></p><div class="chart-box"><canvas id="engagement"></canvas></div></div></div>
+ <div class="col-md-6"><div class="card p-3"><h6>Platform table</h6><div class="table-responsive"><table id="platTable" class="table table-sm"><thead><tr><th>Platform</th><th>Posts</th><th>Positive</th><th>Neutral</th><th>Negative</th></tr></thead><tbody></tbody></table></div></div></div>
+ <div class="col-12"><div class="card p-3"><h6>Top negative posts</h6><div class="table-responsive"><table id="topNeg" class="table table-sm"><thead><tr><th>Platform</th><th>User</th><th>Post</th><th>Engagement</th><th>Crisis score</th></tr></thead><tbody></tbody></table></div></div></div>
+</div>{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>{% endblock %}

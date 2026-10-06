@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}Settings{% endblock %}
+{% block content %}
+<div class="card p-4" style="max-width:640px"><form method="post"><input type="hidden" name="_csrf" value="{{ csrf }}">
+{% for n, label, v in fields %}<div class="mb-3"><label class="form-label">{{ label }}</label><input name="{{ n }}" value="{{ v }}" type="number" step="any" class="form-control" required></div>{% endfor %}
+<p class="small text-muted">Score = weighted mix of negative sentiment, keywords and engagement per post, blended with the activity spike weight over the latest 24h. Manage keywords and their severity on the Keywords page.</p>
+<button class="btn btn-primary">Save settings</button></form></div>{% endblock %}
